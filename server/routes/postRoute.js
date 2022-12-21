@@ -1,6 +1,11 @@
 import express from "express";
-import route from "./usersRoute";
-route = express.Router();
+const route = express.Router();
+import { getFeedPosts, getUserPosts, likePost } from "../controllers/posts.js";
+import { verifyToken } from "../middleware/authMiddleware.js";
+//READ POST
+route.get("/", verifyToken, getFeedPosts);
+route.get("/:userId/posts", verifyToken, getUserPosts);
 
-//Read Posts
-route.get("/:");
+//UPDATE
+route.patch("/:id/likes", verifyToken, likePost);
+export default route;

@@ -11,6 +11,12 @@ import { fileURLToPath } from "url";
 import { register } from "./controllers/Auth.js";
 import authRoutes from "./routes/authRoutes.js";
 import usersRoute from "./routes/usersRoute.js";
+import { verifyToken } from "./middleware/authMiddleware.js";
+import { createPost } from "./controllers/posts.js";
+import postRoute from "./routes/postRoute.js";
+import User from "./models/user.js";
+import Post from "./models/Post.js";
+import { users, posts } from "./data/index.js";
 
 //configs//
 const __filename = fileURLToPath(import.meta.url);
@@ -43,7 +49,7 @@ app.post("/post", verifyToken, upload.single("picture"), createPost);
 //ROUTES
 app.use("/auth", authRoutes);
 app.use("/users", usersRoute);
-app.post("/posts", postRoute);
+app.use("/posts", postRoute);
 
 //mongoose setup
 const PORT = process.env.PORT || 6001;
@@ -51,8 +57,8 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => console.log(`server satrted on port ${PORT}`));
+    //ADD Data one time
+    // User.insertMany(users);
+    // Post.insertMany(posts)
   })
-  //ADD Data one time
-  // User.insertMany(users);
-  // Post.insertMany(posts)
   .catch((err) => console.log(`${err} did not connect`));
